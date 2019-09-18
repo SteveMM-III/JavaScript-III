@@ -1,3 +1,4 @@
+log('prototypes.js');
 /*
   Object oriented design is commonly used in video games.  For this part of the assignment you will be implementing several constructor functions with their correct inheritance hierarchy.
 
@@ -15,6 +16,13 @@
   * dimensions (These represent the character's size in the video game)
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
+function GameObject( params ) {
+   this.createdAt = params.createdAt;
+   this.name = params.name;
+   this.dimensions = params.dimensions;
+};
+
+GameObject.prototype.destroy = function() { return `${this.name} was removed from the game.`; };
 
 /*
   === CharacterStats ===
@@ -22,6 +30,16 @@
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
+function CharacterStats( params ) {
+   GameObject.call(this, params );
+   this.healthPoints = params.healthPoints;
+};
+
+CharacterStats.prototype = Object.create(GameObject.prototype);
+CharacterStats.prototype.takeDamage = function( amount = 0 ) {
+   this.healthPoints -= amount;
+   return `${this.name} took ${amount} damage.`;
+};
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -38,10 +56,23 @@
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
   * Instances of CharacterStats should have all of the same properties as GameObject.
 */
+function Humanoid( params ) {
+   CharacterStats.call(this, params);
+   this.team = params.team;
+   this.weapons = params.weapons;
+   this.language = params.language;
+};
+
+Humanoid.prototype = Object.create(CharacterStats.prototype);
+Humanoid.prototype.greet = function() {
+   return `${this.name} offers a greeting in ${this.language}.`;
+};
+
+
 
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -102,9 +133,85 @@
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
 
+log('stretch');
+/*===========================================================================*/
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+function Hero( params ) {
+   Humanoid.call(this, params);
+   this.alignment = 'good';
+};
+
+Hero.prototype = Object.create(Humanoid.prototype);
+
+function Villain( params) {
+   Humanoid.call(this, params);
+   this.alignment = 'evil';
+};
+
+Villain.prototype = Object.create(Humanoid.prototype);
+
+const myHero = new Hero( {
+   createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 2,
+    },
+    healthPoints: 15,
+    name: 'Goody Two-shoes',
+    team: 'The Round Table',
+    weapons: [
+      'Giant Sword',
+      'Shield',
+    ],
+    language: 'Common Tongue'
+});
+
+const myVillain = new Villain({
+   createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 2,
+    },
+    healthPoints: 15,
+    name: 'Dr. Evil',
+    team: 'The Square Table',
+    weapons: [
+      'Giant Sword',
+      'Shield',
+    ],
+    language: 'Common Tongue'
+});
+
+const fight = ( def ) => {
+   let dmg = Math.floor( Math.random()  * 5 ) + 1;
+   log( def.takeDamage( dmg ) );
+};
+
+let bothFightersLive = true;
+let defender = myHero;
+let lastDefender = "";
+
+log(`${myVillain.name} is about to attack ${myHero.name}`);
+
+do {
+   defender = lastDefender !== myHero ? myHero : myVillain;
+   fight(defender);
+   bothFightersLive = defender.healthPoints > 0 ? true : false;
+   lastDefender = defender;
+} while ( bothFightersLive );
+
+if ( myHero.healthPoints > 0 ) { 
+   log( `The winner is: ${myHero.name}` );
+   log( myHero );
+   log( myVillain.destroy() );
+} else {
+   log( `The winner is: ${myVillain.name}` );
+   log(  myVillain )
+   log( myHero.destroy() );
+}
