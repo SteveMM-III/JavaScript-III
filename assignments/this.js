@@ -12,7 +12,7 @@
 * write out a code example of each explanation above
 */
 
-const log = (msg) => console.log(msg);
+const log = msg => console.log(msg);
 
 
 log('this.js - principle 1');

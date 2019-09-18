@@ -189,7 +189,7 @@ const myVillain = new Villain({
 });
 
 const fight = ( def ) => {
-   let dmg = Math.floor( Math.random(0, 6)  * 10 );
+   let dmg = Math.floor( Math.random()  * 5 ) + 1;
    log( def.takeDamage( dmg ) );
 };
 
