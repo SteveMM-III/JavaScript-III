@@ -134,6 +134,7 @@ Humanoid.prototype.greet = function() {
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 
+log('stretch');
 /*===========================================================================*/
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
@@ -196,6 +197,8 @@ let bothFightersLive = true;
 let defender = myHero;
 let lastDefender = "";
 
+log(`${myVillain.name} is about to attack ${myHero.name}`);
+
 do {
    defender = lastDefender !== myHero ? myHero : myVillain;
    fight(defender);
@@ -204,11 +207,11 @@ do {
 } while ( bothFightersLive );
 
 if ( myHero.healthPoints > 0 ) { 
-   log( `The winner is:` );
+   log( `The winner is: ${myHero.name}` );
    log( myHero );
    log( myVillain.destroy() );
 } else {
-   log( `The winner is:` );
+   log( `The winner is: ${myVillain.name}` );
    log(  myVillain )
    log( myHero.destroy() );
 }
